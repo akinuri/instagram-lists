@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Instagram Following Lists</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50">
+
+<div class="h-[100vh] w-full flex">
+    
+    <section id="following-section" class="max-w-[400px] p-8 flex flex-col gap-4">
+        <h2 class="font-semibold">Followed People</h2>
+        <ul class="list flex flex-col gap-2 grow text-sm overflow-auto pr-2"></ul>
+    </section>
+    
+    <div class="grow p-8 flex flex-col gap-4">
+        <h2 class="font-semibold">Your Lists</h2>
+        <div>
+            [arbitrary lists here]
+        </div>
+    </div>
+    
+</div>
+
+<script src="utils.js"></script>
+
+<script>
+    let followingSection = document.querySelector("#following-section");
+    let followingHeading = followingSection.querySelector("h2");
+    let followingList    = followingSection.querySelector(".list");
+    
+    let followingResponses = [
+        "data/thestackoverflow.json",
+    ];
+    
+    let following = [];
+    
+    (async () => {
+        
+        await fetchURLs(followingResponses, data => {
+            following = following.concat(data.users);
+        });
+        
+        followingHeading.innerHTML += `<span class="opacity-50 ml-1">(${following.length})</span>`;
+        
+        following.forEach(user => {
+            followingList.innerHTML += `
+                <li>
+                    <div class="bg-slate-200 px-2 py-1 pr-4 rounded hover:bg-slate-300/60 flex gap-2 items-center">
+                        <span class="rounded-full min-w-[2rem] aspect-square bg-slate-300"></span>
+                        <div class="flex flex-col items-start">
+                            <a
+                                href="https://instagram.com/${user.username}"
+                                target="_blank"
+                                rel="noreferrer"
+                                class="underline underline-offset-1 decoration-dotted decoration-slate-500 hover:decoration-solid"
+                                >
+                                ${user.username}
+                            </a>
+                            <span class="opacity-50">${user.full_name}</span>
+                        </div>
+                    </div>
+                </li>
+            `;
+        });
+        
+    })();
+    
+</script>
+
+</body>
+</html>
